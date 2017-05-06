@@ -34,7 +34,8 @@ void handler(int signum) {
 
 void initializeSearch() {
   loadCities();
-  theBestSolution = createSimpleSolution();
+  // theBestSolution = createSimpleSolution();
+  theBestSolution = createGreedySolution();
 
   // TODO initial initialization, subject to changes
   maxTemperature = theBestSolution.value;

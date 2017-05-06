@@ -22,6 +22,40 @@ solution_t createSimpleSolution() {
   return solution;
 }
 
+solution_t createGreedySolution() {
+  solution_t solution;
+  double value = 0;
+  int *order = new int[n + 1];
+  bool *avalible = new bool[n];
+  memset(avalible, true, n*sizeof(bool));
+  order[0] = 0;
+  order[n] = 0;
+  avalible[0] = false;
+  int minPos;
+  double min;
+  for (int i = 1; i < n; i++) {
+    min = FLT_MAX;
+    for (int j = 1; j < n; j++) {
+      if (avalible[j]) {
+        float temp = getDistance(order[i-1], j);
+        if (temp < min) {
+          minPos = j;
+          min = temp;
+        }
+      }
+    }
+    avalible[minPos] = false;
+    order[i] = minPos;
+    value += min;
+  }
+  value += getDistance(order[n], order[n-1]);
+
+  delete[] avalible;
+  solution.order = order;
+  solution.value = value;
+  return solution;
+}
+
 double calculateDistance(solution_t solution) {
   double distance = 0;
   for (int i = 1; i <= n; i++) {
