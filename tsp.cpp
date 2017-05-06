@@ -25,17 +25,18 @@ void printResult() {
   }
   cerr << endl;
   delete[] theBestSolution.order;
-  //exit(0);
 }
 
 void handler(int signum) {
   printResult();
+  exit(0);
 }
 
 void initializeSearch() {
   loadCities();
   // theBestSolution = createSimpleSolution();
-  theBestSolution = createGreedySolution();
+  // theBestSolution = createGreedySolution();
+  theBestSolution = createNEHSolution();
 
   // TODO initial initialization, subject to changes
   maxTemperature = theBestSolution.value;

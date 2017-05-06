@@ -56,6 +56,36 @@ solution_t createGreedySolution() {
   return solution;
 }
 
+solution_t createNEHSolution() {
+  solution_t solution;
+  double value = 0;
+  int *order = new int[n + 1];
+  memset(order, -1, (n + 1) * sizeof(int));
+  order[0] = 0; order[1] = 1; order[2] = 0;
+  value += getDistance(0, 1) * 2;
+
+  for (int i = 2; i < n; i++) {
+    double min = FLT_MAX;
+    int minPos;
+    for (int j = 1; j <= i; j++) {
+      double distance = getDistance(order[j-1], i) + getDistance(i, order[j]) - getDistance(order[j-1], order[j]);
+      if (distance < min) {
+        min = distance;
+        minPos = j;
+      }
+    }
+    for (int j = n; j > minPos; j--) {
+      order[j] = order[j-1];
+    }
+    order[minPos] = i;
+    value += min;
+  }
+
+  solution.order = order;
+  solution.value = value;
+  return solution;
+}
+
 double calculateDistance(solution_t solution) {
   double distance = 0;
   for (int i = 1; i <= n; i++) {
