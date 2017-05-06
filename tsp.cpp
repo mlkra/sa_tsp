@@ -12,18 +12,19 @@ using namespace std;
 
 float maxTemperature;
 float endTemperature;
-float alpha1;
-float alpha2;
-int bigJump;
+float alpha1 = 0.95;
+float alpha2 = 0.85;
+int bigJump = 1000;
 
 solution_t theBestSolution;
 
 void printResult() {
-  cout << calculateDistance(theBestSolution) << endl;
+  // cout << calculateDistance(theBestSolution) << endl;
   for (int i = 0; i <= n; i++) {
     cerr << theBestSolution.order[i] + 1 << " ";
   }
   cerr << endl;
+  cout << calculateDistance(theBestSolution) << endl;
   delete[] theBestSolution.order;
 }
 
@@ -39,16 +40,31 @@ void initializeSearch() {
   theBestSolution = createNEHSolution();
 
   // TODO initial initialization, subject to changes
+  // max temperature should be better
   maxTemperature = theBestSolution.value;
   endTemperature = 0.01 * maxTemperature;
-  alpha1 = 0.01;
-  alpha2 = 0.15;
-  bigJump = 1000;
 
   srand(time(NULL));
   struct sigaction act;
   act.sa_handler = handler;
   sigaction(SIGINT, &act, NULL);
+}
+
+inline permutation_t generatePermutation() {
+  int a = rand() % (n - 1) + 1;
+  int b = rand() % (n - 1) + 1;
+  while (a == b) {
+    b = rand() % (n - 1) + 1;
+  }
+  permutation_t permutation;
+  if (a > b) {
+    permutation.a = b;
+    permutation.b = a;
+  } else {
+    permutation.a = a;
+    permutation.b = b;
+  }
+  return permutation;
 }
 
 void search() {
@@ -59,19 +75,7 @@ void search() {
   float temperature = maxTemperature;
 
   while (temperature > endTemperature) {
-    int a = rand() % (n - 1) + 1;
-    int b = rand() % (n - 1) + 1;
-    while (a == b) {
-      b = rand() % (n - 1) + 1;
-    }
-    permutation_t permutation;
-    if (a > b) {
-      permutation.a = b;
-      permutation.b = a;
-    } else {
-      permutation.a = a;
-      permutation.b = b;
-    }
+    permutation_t permutation = generatePermutation();
     double distance = calculateNeighbourDistance(currentSolution, permutation);
     if (currentSolution.value < distance) {
       swap(&currentSolution, permutation);
@@ -80,15 +84,14 @@ void search() {
         theBestSolution.value = currentSolution.value;
         memcpy(theBestSolution.order, currentSolution.order, (n + 1) * sizeof(int));
       }
-      temperature = temperature * (1 - alpha1);
+      temperature = temperature * alpha1;
     } else {
       double delta = distance - currentSolution.value;
       float p = exp(-delta / temperature);
-      // float p = 1.0 / (1.0 + exp(delta / temperature));
       if ((float) rand() / (1.0 * RAND_MAX) < p) {
         swap(&currentSolution, permutation);
         currentSolution.value = distance;
-        temperature = temperature * (1 - alpha1);
+        temperature = temperature * alpha1;
       }
     }
   }
