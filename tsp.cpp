@@ -10,11 +10,12 @@
 
 using namespace std;
 
-float maxTemperature;
-float endTemperature;
-float alpha1 = 0.95;
+double initialTemperature;
+double endTemperature;
+float alpha1 = 0.65;
 float alpha2 = 0.85;
 int bigJump = 1000;
+int ITERATIONS = 100000000;
 
 solution_t theBestSolution;
 
@@ -33,6 +34,21 @@ void handler(int signum) {
   exit(0);
 }
 
+inline double getInitialTemperature(double min) {
+  solution_t solution;
+  solution = createSimpleSolution();
+  double max = solution.value;
+  delete[] solution.order;
+  for (int i = 0; i < 50; i ++) {
+    solution = createRandomSolution();
+    if (max < solution.value) {
+      max = solution.value;
+    }
+    delete[] solution.order;
+  }
+  return max - min;
+}
+
 void initializeSearch() {
   loadCities();
   // theBestSolution = createSimpleSolution();
@@ -41,8 +57,8 @@ void initializeSearch() {
 
   // TODO initial initialization, subject to changes
   // max temperature should be better
-  maxTemperature = theBestSolution.value;
-  endTemperature = 0.01 * maxTemperature;
+  initialTemperature = getInitialTemperature(theBestSolution.value) / 2;
+  endTemperature = 0.01 * initialTemperature;
 
   srand(time(NULL));
 }
@@ -75,28 +91,36 @@ void search() {
   currentSolution.order = new int[n+1];
   currentSolution.value = theBestSolution.value;
   memcpy(currentSolution.order, theBestSolution.order, (n + 1) * sizeof(int));
-  float temperature = maxTemperature;
+  float temperature = initialTemperature;
 
-  while (temperature > endTemperature) {
-    permutation_t permutation = generatePermutation();
-    double distance = calculateNeighbourDistance(currentSolution, permutation);
-    if (currentSolution.value < distance) {
-      swap(&currentSolution, permutation);
-      currentSolution.value = distance;
-      if (currentSolution.value < theBestSolution.value) {
-        theBestSolution.value = currentSolution.value;
-        memcpy(theBestSolution.order, currentSolution.order, (n + 1) * sizeof(int));
-      }
-      temperature = temperature * alpha1;
-    } else {
-      double delta = distance - currentSolution.value;
-      float p = exp(-delta / temperature);
-      if ((float) rand() / (1.0 * RAND_MAX) < p) {
+  int k = 0;
+  while (k < ITERATIONS) {
+    while (temperature > endTemperature) {
+      permutation_t permutation = generatePermutation();
+      double distance = calculateNeighbourDistance(currentSolution, permutation);
+      if (currentSolution.value < distance) {
         swap(&currentSolution, permutation);
         currentSolution.value = distance;
-        temperature = temperature * alpha1;
+        if (currentSolution.value < theBestSolution.value) {
+          theBestSolution.value = currentSolution.value;
+          memcpy(theBestSolution.order, currentSolution.order, (n + 1) * sizeof(int));
+        }
+        // temperature *= alpha1;
+      } else {
+        double delta = distance - currentSolution.value;
+        float p = exp(-delta / temperature);
+        if ((float) rand() / (1.0 * RAND_MAX) < p) {
+          swap(&currentSolution, permutation);
+          currentSolution.value = distance;
+          // temperature *= alpha1;
+        }
       }
+      temperature *= alpha1;
+      k++;
     }
+    currentSolution.value = theBestSolution.value;
+    memcpy(currentSolution.order, theBestSolution.order, (n + 1) * sizeof(int));
+    temperature = initialTemperature;
   }
   printResult();
 }

@@ -10,6 +10,7 @@ typedef struct {
 } permutation_t;
 
 solution_t createSimpleSolution();
+solution_t createRandomSolution();
 solution_t createGreedySolution();
 solution_t createNEHSolution();
 double calculateDistance(solution_t solution);

@@ -4,6 +4,8 @@
 
 #include <cstring>
 #include <cfloat>
+#include <cmath>
+#include <iostream>
 
 solution_t createSimpleSolution() {
   solution_t solution;
@@ -19,6 +21,28 @@ solution_t createSimpleSolution() {
 
   solution.order = order;
   solution.value = value;
+  return solution;
+}
+
+solution_t createRandomSolution() {
+  solution_t solution;
+  int *order = new int[n+1];
+  for (int i = 0; i < n; i++) {
+    order[i] = i;
+  }
+  order[n] = 0;
+
+  for (int i = 0; i < n*log(n); i++) {
+    int a = rand() % (n - 1) + 1;
+    int b = rand() % (n - 1) + 1;
+    int temp = order[a];
+    order[a] = order[b];
+    order[b] = temp;
+  }
+
+  solution.order = order;
+  solution.value = calculateDistance(solution);
+
   return solution;
 }
 
