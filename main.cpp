@@ -13,9 +13,12 @@ int main(int argc, char const *argv[]) {
   initializeSearch();
   int limit;
   cin >> limit;
+  pid_t ppid = getpid();
   pid_t pid = fork();
   if (pid == 0) {
+    setupHandler();
     search();
+    kill(ppid, SIGINT);
   } else {
     time_t currentTime;
     while (1) {

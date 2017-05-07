@@ -9,4 +9,5 @@ extern float alpha2;
 extern int bigJump;
 
 void initializeSearch();
+void setupHandler();
 void search();

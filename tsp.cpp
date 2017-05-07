@@ -45,6 +45,9 @@ void initializeSearch() {
   endTemperature = 0.01 * maxTemperature;
 
   srand(time(NULL));
+}
+
+void setupHandler() {
   struct sigaction act;
   act.sa_handler = handler;
   sigaction(SIGINT, &act, NULL);
