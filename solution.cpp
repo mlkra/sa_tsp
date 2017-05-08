@@ -123,9 +123,7 @@ double calculateDistance2(solution_t solution) {
   for (int i = 1; i <= n; i++) {
     city_t c1 = cities[solution.order[i-1]];
     city_t c2 = cities[solution.order[i]];
-    double x = c1.x - c2.x;
-    double y = c1.y - c2.y;
-    distance += sqrt((x*x) + (y*y));
+    distance += sqrt(pow(c1.x - c2.x, 2) + pow(c1.y - c2.y, 2));
   }
   return distance;
 }

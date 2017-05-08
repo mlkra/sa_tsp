@@ -2,8 +2,8 @@
 
 typedef struct {
   int label;
-  double x;
-  double y;
+  float x;
+  float y;
 } city_t;
 
 extern short n;

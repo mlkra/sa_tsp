@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int ITERATIONS = 10000000;
+int ITERATIONS = 1000000000;
 
 solution_t theBestSolution;
 

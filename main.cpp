@@ -25,7 +25,7 @@ int main(int argc, char const *argv[]) {
     while (1) {
       sleep(1);
       currentTime = time(NULL);
-      if (currentTime - start - 1 >= limit) {
+      if (currentTime - start >= limit - 1) {
         kill(pid, SIGINT);
         break;
       }

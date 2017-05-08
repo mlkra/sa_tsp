@@ -24,7 +24,7 @@ void calculateDistances() {
   }
   for (int i = 0; i < n - 1; i++) {
     for (int j = i + 1; j < n; j++) {
-      int distance = calculateDistanceBetweenCities(i, j);
+      float distance = calculateDistanceBetweenCities(i, j);
       distances[i][j-i] = distance;
       if (distance > maxDistance) {
         maxDistance = distance;
