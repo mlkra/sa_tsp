@@ -118,6 +118,18 @@ double calculateDistance(solution_t solution) {
   return distance;
 }
 
+double calculateDistance2(solution_t solution) {
+  double distance = 0;
+  for (int i = 1; i <= n; i++) {
+    city_t c1 = cities[solution.order[i-1]];
+    city_t c2 = cities[solution.order[i]];
+    double x = c1.x - c2.x;
+    double y = c1.y - c2.y;
+    distance += sqrt((x*x) + (y*y));
+  }
+  return distance;
+}
+
 double calculateNeighbourDistance(solution_t solution, permutation_t permutation) {
   double distance = solution.value;
   distance -= getDistance(solution.order[permutation.a-1], solution.order[permutation.a]);

@@ -20,7 +20,7 @@ void printResult() {
     cerr << theBestSolution.order[i] + 1 << " ";
   }
   cerr << endl;
-  cout << calculateDistance(theBestSolution) << endl;
+  cout << calculateDistance2(theBestSolution) << endl;
   delete[] theBestSolution.order;
 }
 
@@ -33,6 +33,7 @@ void initializeSearch() {
   calculateDistances();
   theBestSolution = createNEHSolution();
   cout << theBestSolution.value << endl;
+  cout << calculateDistance2(theBestSolution) << endl;
 
   srand(time(NULL));
 }
