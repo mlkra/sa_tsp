@@ -5,7 +5,7 @@
 #include <cstring>
 #include <cfloat>
 #include <cmath>
-#include <iostream>
+#include <cstdlib>
 
 solution_t createSimpleSolution() {
   solution_t solution;

@@ -7,6 +7,7 @@
 #include <csignal>
 #include <cstring>
 #include <cmath>
+#include <cstdlib>
 
 using namespace std;
 
