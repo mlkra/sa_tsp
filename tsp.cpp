@@ -10,12 +10,7 @@
 
 using namespace std;
 
-double initialTemperature;
-double endTemperature;
-float alpha1 = 0.65;
-float alpha2 = 0.85;
-int bigJump = 1000;
-int ITERATIONS = 100000000;
+int ITERATIONS = 1000000000;
 
 solution_t theBestSolution;
 
@@ -36,14 +31,9 @@ void handler(int signum) {
 
 void initializeSearch() {
   calculateDistances();
-  // theBestSolution = createSimpleSolution();
-  // theBestSolution = createGreedySolution();
   theBestSolution = createNEHSolution();
 
-  // TODO initial initialization, subject to changes
-  // max temperature should be better
-  initialTemperature = maxDistance * 10;
-  endTemperature = 0.01 * initialTemperature;
+  cout << theBestSolution.value;
 
   srand(time(NULL));
 }
@@ -76,11 +66,9 @@ void search() {
   currentSolution.order = new int[n+1];
   currentSolution.value = theBestSolution.value;
   memcpy(currentSolution.order, theBestSolution.order, (n + 1) * sizeof(int));
-  float temperature = initialTemperature;
 
   int k = 0;
   while (k < ITERATIONS) {
-    while (temperature > endTemperature) {
       permutation_t permutation = generatePermutation();
       double distance = calculateNeighbourDistance(currentSolution, permutation);
       if (currentSolution.value < distance) {
@@ -90,22 +78,8 @@ void search() {
           theBestSolution.value = currentSolution.value;
           memcpy(theBestSolution.order, currentSolution.order, (n + 1) * sizeof(int));
         }
-        // temperature *= alpha1;
-      } else {
-        double delta = distance - currentSolution.value;
-        float p = exp(-delta / temperature);
-        if ((float) rand() / (1.0 * RAND_MAX) < p) {
-          swap(&currentSolution, permutation);
-          currentSolution.value = distance;
-          // temperature *= alpha1;
-        }
       }
-      temperature *= alpha1;
       k++;
-    }
-    currentSolution.value = theBestSolution.value;
-    memcpy(currentSolution.order, theBestSolution.order, (n + 1) * sizeof(int));
-    temperature = initialTemperature;
   }
   printResult();
 }
