@@ -83,7 +83,7 @@ void search() {
     while (temperature > endTemperature) {
       permutation_t permutation = generatePermutation();
       double distance = calculateNeighbourDistance(currentSolution, permutation);
-      if (currentSolution.value < distance) {
+      if (currentSolution.value > distance) {
         swap(&currentSolution, permutation);
         currentSolution.value = distance;
         if (currentSolution.value < theBestSolution.value) {
