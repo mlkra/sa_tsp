@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int ITERATIONS = 1000000000;
+int ITERATIONS = 1000000;
 
 solution_t theBestSolution;
 
@@ -21,6 +21,7 @@ void printResult() {
   }
   cerr << endl;
   cout << calculateDistance(theBestSolution) << endl;
+  cout << theBestSolution.value << endl;
   delete[] theBestSolution.order;
 }
 
@@ -62,22 +63,13 @@ inline permutation_t generatePermutation() {
 }
 
 void search() {
-  solution_t currentSolution;
-  currentSolution.order = new int[n+1];
-  currentSolution.value = theBestSolution.value;
-  memcpy(currentSolution.order, theBestSolution.order, (n + 1) * sizeof(int));
-
   int k = 0;
   while (k < ITERATIONS) {
       permutation_t permutation = generatePermutation();
-      double distance = calculateNeighbourDistance(currentSolution, permutation);
-      if (currentSolution.value < distance) {
-        swap(&currentSolution, permutation);
-        currentSolution.value = distance;
-        if (currentSolution.value < theBestSolution.value) {
-          theBestSolution.value = currentSolution.value;
-          memcpy(theBestSolution.order, currentSolution.order, (n + 1) * sizeof(int));
-        }
+      double distance = calculateNeighbourDistance(theBestSolution, permutation);
+      if (theBestSolution.value > distance) {
+        swap(&theBestSolution, permutation);
+        theBestSolution.value = distance;
       }
       k++;
   }
