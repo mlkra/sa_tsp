@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int ITERATIONS = 1000000;
+int ITERATIONS = 10000000;
 
 solution_t theBestSolution;
 
@@ -21,7 +21,6 @@ void printResult() {
   }
   cerr << endl;
   cout << calculateDistance(theBestSolution) << endl;
-  cout << theBestSolution.value << endl;
   delete[] theBestSolution.order;
 }
 
@@ -33,8 +32,7 @@ void handler(int signum) {
 void initializeSearch() {
   calculateDistances();
   theBestSolution = createNEHSolution();
-
-  cout << theBestSolution.value;
+  cout << theBestSolution.value << endl;
 
   srand(time(NULL));
 }
@@ -70,6 +68,7 @@ void search() {
       if (theBestSolution.value > distance) {
         swap(&theBestSolution, permutation);
         theBestSolution.value = distance;
+        cout << theBestSolution.value << endl;
       }
       k++;
   }
