@@ -34,30 +34,15 @@ void handler(int signum) {
   exit(0);
 }
 
-inline double getInitialTemperature(double min) {
-  solution_t solution;
-  solution = createSimpleSolution();
-  double max = solution.value;
-  delete[] solution.order;
-  for (int i = 0; i < 50; i ++) {
-    solution = createRandomSolution();
-    if (max < solution.value) {
-      max = solution.value;
-    }
-    delete[] solution.order;
-  }
-  return max - min;
-}
-
 void initializeSearch() {
-  loadCities();
+  calculateDistances();
   // theBestSolution = createSimpleSolution();
   // theBestSolution = createGreedySolution();
   theBestSolution = createNEHSolution();
 
   // TODO initial initialization, subject to changes
   // max temperature should be better
-  initialTemperature = getInitialTemperature(theBestSolution.value) / 2;
+  initialTemperature = maxDistance * 10;
   endTemperature = 0.01 * initialTemperature;
 
   srand(time(NULL));

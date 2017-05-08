@@ -7,6 +7,7 @@ using namespace std;
 
 short n;
 city_t* cities;
+float maxDistance;
 float **distances;
 
 inline float calculateDistanceBetweenCities(int city1, int city2) {
@@ -15,14 +16,19 @@ inline float calculateDistanceBetweenCities(int city1, int city2) {
   return sqrt(pow(c1.x - c2.x, 2) + pow(c1.y - c2.y, 2));
 }
 
-inline void calculateDistances() {
+void calculateDistances() {
+  maxDistance = 0;
   distances = new float*[n];
   for (int i = 0; i < n; i++) {
     distances[i] = new float[n-i];
   }
   for (int i = 0; i < n - 1; i++) {
     for (int j = i + 1; j < n; j++) {
-      distances[i][j-i] = calculateDistanceBetweenCities(i, j);
+      int distance = calculateDistanceBetweenCities(i, j);
+      distances[i][j-i] = distance;
+      if (distance > maxDistance) {
+        maxDistance = distance;
+      }
     }
   }
 }
@@ -35,7 +41,6 @@ void loadCities() {
     cin >> cities[i].x;
     cin >> cities[i].y;
   }
-  calculateDistances();
 }
 
 float getDistance(int c1, int c2) {

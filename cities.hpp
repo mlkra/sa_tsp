@@ -7,6 +7,8 @@ typedef struct {
 } city_t;
 
 extern short n;
+extern float maxDistance;
 
 void loadCities();
+void calculateDistances();
 float getDistance(int c1, int c2);
