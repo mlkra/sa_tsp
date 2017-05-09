@@ -9,7 +9,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <random>
-#include <functional>
 #include <ctime>
 
 using namespace std;
@@ -18,10 +17,12 @@ int ITERATIONS = 1000000000;
 
 solution_t theBestSolution;
 
+// potentially risky
+// random_device rd;
+// mt19937 generator(rd());
 mt19937 generator(time(NULL));
 uniform_real_distribution<double> disD(0.0, 1.0);
 uniform_int_distribution<int> disI;
-auto intRand = bind(disI, generator);
 
 void printResult() {
   // cout << calculateDistance(theBestSolution) << endl;
@@ -54,10 +55,13 @@ void setupHandler() {
 }
 
 inline permutation_t generatePermutation() {
-  int a = intRand() % (n - 1) + 1;
-  int b = intRand() % (n - 1) + 1;
+  // int a = rand() % (n - 1) + 1;
+  int a = disI(generator);
+  // int b = rand() % (n - 1) + 1;
+  int b = disI(generator);
   while (a == b) {
-    b = intRand() % (n - 1) + 1;
+    // b = rand() % (n - 1) + 1;
+    b = disI(generator);
   }
   permutation_t permutation;
   if (a > b) {
