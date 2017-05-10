@@ -18,7 +18,7 @@ int ITERATIONS = 10000000;
 
 float initialTemperature;
 int divisor = 64;
-float alpha1 = 0.9999;
+float alpha1 = 0.99999;
 
 solution_t theBestSolution;
 
@@ -33,6 +33,7 @@ uniform_int_distribution<int> disI;
 double neh;
 
 void printResult() {
+  // TODO uncomment
   // cout << calculateDistance(theBestSolution) << endl;
   for (int i = 0; i <= n; i++) {
     cerr << theBestSolution.order[i] + 1 << " ";
@@ -96,10 +97,10 @@ void search() {
   int wCounter = 0;
   solution_t currentSulution;
   currentSulution.order = new int[n+1];
+  memcpy(currentSulution.order, theBestSolution.order, (n+1)*sizeof(int));
+  currentSulution.value = theBestSolution.value;
   float temperature = initialTemperature;
   while (k < ITERATIONS) {
-    // memcpy(currentSulution.order, theBestSolution.order, (n+1)*sizeof(int));
-    // currentSulution.value = theBestSolution.value;
     temperature = initialTemperature;
     while (temperature > 1) {
       permutation_t permutation = generatePermutation();
@@ -108,8 +109,6 @@ void search() {
       if (delta < 0) {
         swap(&currentSulution, permutation);
         currentSulution.value = distance;
-        // TODO remove
-        // cout << currentSulution.value << endl;
         if (currentSulution.value < theBestSolution.value) {
           wCounter = 0;
           cout << currentSulution.value << endl;
