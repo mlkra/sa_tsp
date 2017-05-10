@@ -1,5 +1,5 @@
 all: main.cpp tsp.o solution.o cities.o
-	g++- -O3 -std=c++11 main.cpp tsp.o solution.o cities.o -o main
+	g++ -O3 -std=c++11 main.cpp tsp.o solution.o cities.o -o main
 
 tsp.o: tsp.cpp
 	g++ -c -O3 -std=c++11 tsp.cpp

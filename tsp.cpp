@@ -16,6 +16,9 @@ using namespace std;
 
 int ITERATIONS = 1000000000;
 
+float initialTemperature;
+float alpha1 = 0.9999;
+
 solution_t theBestSolution;
 
 // potentially risky
@@ -43,6 +46,7 @@ void handler(int signum) {
 void initializeSearch() {
   disI.param(uniform_int_distribution<>::param_type{1, n-1});
   calculateDistances();
+  initialTemperature = maxDistance / 2;
   theBestSolution = createNEHSolution();
   // cout << calculateDistance(theBestSolution) << endl;
 
@@ -82,17 +86,35 @@ inline permutation_t generatePermutation() {
 }
 
 void search() {
+  auto doubleRand = bind(disD, generator);
   int k = 0;
+  solution_t currentSulution;
+  currentSulution.order = new int[n+1];
+  float temperature = initialTemperature;
   while (k < ITERATIONS) {
+    memcpy(currentSulution.order, theBestSolution.order, (n+1)*sizeof(int));
+    currentSulution.value = theBestSolution.value;
+    while (temperature > 1) {
       permutation_t permutation = generatePermutation();
-      double distance = calculateNeighbourDistance(theBestSolution, permutation);
-      if (theBestSolution.value > distance) {
-        swap(&theBestSolution, permutation);
-        theBestSolution.value = distance;
+      double distance = calculateNeighbourDistance(currentSulution, permutation);
+      double delta = distance - currentSulution.value;
+      if (delta < 0) {
+        swap(&currentSulution, permutation);
+        currentSulution.value = distance;
         // TODO remove
-        cout << theBestSolution.value << endl;
+        cout << currentSulution.value << endl;
+        if (currentSulution.value < theBestSolution.value) {
+          memcpy(theBestSolution.order, currentSulution.order, (n+1)*sizeof(int));
+          theBestSolution.value = currentSulution.value;
+        }
+      } else if ((1 / (1 + exp(delta / temperature))) > doubleRand()) {
+        swap(&currentSulution, permutation);
+        currentSulution.value = distance;
       }
+      temperature *= alpha1;
       k++;
+    }
+    break;
   }
   printResult();
 }
