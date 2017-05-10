@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <random>
+#include <functional>
 #include <ctime>
 
 using namespace std;
@@ -45,7 +46,7 @@ void initializeSearch() {
   theBestSolution = createNEHSolution();
   // cout << calculateDistance(theBestSolution) << endl;
 
-  srand(time(NULL));
+  // srand(time(NULL));
 }
 
 void setupHandler() {
@@ -55,13 +56,19 @@ void setupHandler() {
 }
 
 inline permutation_t generatePermutation() {
+  auto intRand = bind(disI, ref(generator));
   // int a = rand() % (n - 1) + 1;
-  int a = disI(generator);
+  // int a = disI(generator);
+  int a = intRand();
+  // cout << a << endl;
   // int b = rand() % (n - 1) + 1;
-  int b = disI(generator);
+  // int b = disI(generator);
+  int b = intRand();
+  // cout << b << endl;
   while (a == b) {
     // b = rand() % (n - 1) + 1;
-    b = disI(generator);
+    // b = disI(generator);
+    b = intRand();
   }
   permutation_t permutation;
   if (a > b) {
