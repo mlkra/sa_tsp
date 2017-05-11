@@ -1,6 +1,6 @@
 #pragma once
 
-extern float initialTemperature;
+extern double initialTemperature;
 extern float alpha1;
 extern int ITERATIONS;
 

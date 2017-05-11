@@ -11,14 +11,15 @@
 #include <random>
 #include <functional>
 #include <ctime>
+#include <cfloat>
 
 using namespace std;
 
 int ITERATIONS = 10000000;
 
-float initialTemperature;
-int divisor = 64;
-float alpha1 = 0.99999;
+double initialTemperature;
+int divisor = 32;
+float alpha1 = 0.9999999;
 
 solution_t theBestSolution;
 
@@ -99,8 +100,10 @@ void search() {
   currentSulution.order = new int[n+1];
   memcpy(currentSulution.order, theBestSolution.order, (n+1)*sizeof(int));
   currentSulution.value = theBestSolution.value;
-  float temperature = initialTemperature;
+  double temperature = initialTemperature;
   while (k < ITERATIONS) {
+    memcpy(currentSulution.order, theBestSolution.order, (n+1)*sizeof(int));
+    currentSulution.value = theBestSolution.value;
     temperature = initialTemperature;
     while (temperature > 1) {
       permutation_t permutation = generatePermutation();
@@ -120,15 +123,14 @@ void search() {
         swap(&currentSulution, permutation);
         currentSulution.value = distance;
       }
-      if (wCounter > 20) {
-        wCounter = 0;
-        memcpy(currentSulution.order, theBestSolution.order, (n+1)*sizeof(int));
-        currentSulution.value = theBestSolution.value;
-      }
+      // if (wCounter > 20) {
+      //   wCounter = 0;
+      //   memcpy(currentSulution.order, theBestSolution.order, (n+1)*sizeof(int));
+      //   currentSulution.value = theBestSolution.value;
+      // }
       temperature *= alpha1;
       k++;
     }
-    // break;
   }
   printResult();
 }
