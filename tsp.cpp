@@ -67,19 +67,10 @@ void setupHandler() {
 }
 
 inline permutation_t generatePermutation() {
-  auto intRand = bind(disI, ref(generator));
-  // int a = rand() % (n - 1) + 1;
-  // int a = disI(generator);
-  int a = intRand();
-  // cout << a << endl;
-  // int b = rand() % (n - 1) + 1;
-  // int b = disI(generator);
-  int b = intRand();
-  // cout << b << endl;
+  int a = disI(generator);
+  int b = disI(generator);
   while (a == b) {
-    // b = rand() % (n - 1) + 1;
-    // b = disI(generator);
-    b = intRand();
+    b = disI(generator);
   }
   permutation_t permutation;
   if (a > b) {
@@ -94,17 +85,17 @@ inline permutation_t generatePermutation() {
 
 void search() {
   auto doubleRand = bind(disD, generator);
-  int k = 0;
-  int wCounter = 0;
+  // int k = 0;
+  // int wCounter = 0;
   solution_t currentSulution;
   currentSulution.order = new int[n+1];
   memcpy(currentSulution.order, theBestSolution.order, (n+1)*sizeof(int));
   currentSulution.value = theBestSolution.value;
   double temperature = initialTemperature;
-  while (k < ITERATIONS) {
-    memcpy(currentSulution.order, theBestSolution.order, (n+1)*sizeof(int));
-    currentSulution.value = theBestSolution.value;
-    temperature = initialTemperature;
+  // while (k < ITERATIONS) {
+    // memcpy(currentSulution.order, theBestSolution.order, (n+1)*sizeof(int));
+    // currentSulution.value = theBestSolution.value;
+    // temperature = initialTemperature;
     while (temperature > 1) {
       permutation_t permutation = generatePermutation();
       double distance = calculateNeighbourDistance(currentSulution, permutation);
@@ -113,13 +104,13 @@ void search() {
         swap(&currentSulution, permutation);
         currentSulution.value = distance;
         if (currentSulution.value < theBestSolution.value) {
-          wCounter = 0;
+          // wCounter = 0;
           cout << currentSulution.value << endl;
           memcpy(theBestSolution.order, currentSulution.order, (n+1)*sizeof(int));
           theBestSolution.value = currentSulution.value;
         }
       } else if ((1 / (1 + exp(delta / temperature))) > doubleRand()) {
-        wCounter++;
+        // wCounter++;
         swap(&currentSulution, permutation);
         currentSulution.value = distance;
       }
@@ -129,8 +120,9 @@ void search() {
       //   currentSulution.value = theBestSolution.value;
       // }
       temperature *= alpha1;
-      k++;
+      // k++;
     }
-  }
+  // }
+  delete[] currentSulution.order;
   printResult();
 }
