@@ -16,21 +16,21 @@ int main(int argc, char const *argv[]) {
   pid_t ppid = getpid();
   pid_t pid = fork();
   if (pid == 0) {
-    initializeSearch();
-    setupHandler();
-    search();
-    kill(ppid, SIGINT);
-  } else {
     time_t currentTime;
     while (1) {
       sleep(1);
       currentTime = time(NULL);
-      if (currentTime - start - 1 >= limit) {
-        kill(pid, SIGINT);
+      if (currentTime - start >= limit - 1) {
+        kill(ppid, SIGINT);
         break;
       }
     }
     wait(NULL);
+  } else {
+    initializeSearch();
+    setupHandler();
+    search();
+    kill(pid, SIGINT);
   }
   return 0;
 }

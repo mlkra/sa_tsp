@@ -5,7 +5,7 @@
 #include <cstring>
 #include <cfloat>
 #include <cmath>
-#include <iostream>
+#include <cstdlib>
 
 solution_t createSimpleSolution() {
   solution_t solution;
@@ -114,6 +114,16 @@ double calculateDistance(solution_t solution) {
   double distance = 0;
   for (int i = 1; i <= n; i++) {
     distance += getDistance(solution.order[i-1], solution.order[i]);
+  }
+  return distance;
+}
+
+double calculateDistance2(solution_t solution) {
+  double distance = 0;
+  for (int i = 1; i <= n; i++) {
+    city_t c1 = cities[solution.order[i-1]];
+    city_t c2 = cities[solution.order[i]];
+    distance += sqrt(pow(c1.x - c2.x, 2) + pow(c1.y - c2.y, 2));
   }
   return distance;
 }
